@@ -47,8 +47,7 @@ const MarkdownContent = ({
   const { setDocumentIds, data: fileThumbnails } =
     useFetchDocumentThumbnailsByIds();
   const contentWithCursor = useMemo(() => {
-    // let text = DOMPurify.sanitize(content);
-    let text = content;
+    let text = DOMPurify.sanitize(content);
     if (text === '') {
       text = t('chat.searching');
     }
