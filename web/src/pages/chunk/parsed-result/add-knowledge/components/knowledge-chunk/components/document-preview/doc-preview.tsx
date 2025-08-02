@@ -2,6 +2,7 @@ import message from '@/components/ui/message';
 import { Spin } from '@/components/ui/spin';
 import request from '@/utils/request';
 import classNames from 'classnames';
+import DOMPurify from 'dompurify';
 import mammoth from 'mammoth';
 import { useEffect, useState } from 'react';
 import { useGetDocumentUrl } from './hooks';
@@ -35,7 +36,32 @@ export const DocPreviewer: React.FC<DocPreviewerProps> = ({ className }) => {
         .replace(/<p>/g, '<p class="mb-2">')
         .replace(/<h(\d)>/g, '<h$1 class="font-semibold mt-4 mb-2">');
 
-      setHtmlContent(styledContent);
+      // Sanitize the HTML content to prevent XSS attacks
+      const sanitizedContent = DOMPurify.sanitize(styledContent, {
+        ALLOWED_TAGS: [
+          'p',
+          'h1',
+          'h2',
+          'h3',
+          'h4',
+          'h5',
+          'h6',
+          'br',
+          'strong',
+          'em',
+          'u',
+          'ol',
+          'ul',
+          'li',
+          'blockquote',
+          'code',
+          'pre',
+        ],
+        ALLOWED_ATTR: ['class', 'id', 'style'],
+        KEEP_CONTENT: true,
+      });
+
+      setHtmlContent(sanitizedContent);
     } catch (err) {
       message.error('Document parsing failed');
       console.error('Error parsing document:', err);
