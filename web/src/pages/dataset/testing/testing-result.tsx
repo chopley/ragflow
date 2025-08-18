@@ -6,6 +6,7 @@ import { RAGFlowPagination } from '@/components/ui/ragflow-pagination';
 import { useTranslate } from '@/hooks/common-hooks';
 import { useTestRetrieval } from '@/hooks/use-knowledge-request';
 import { ITestingChunk } from '@/interfaces/database/knowledge';
+import DOMPurify from 'dompurify';
 import camelCase from 'lodash/camelCase';
 import { useMemo } from 'react';
 
@@ -80,7 +81,12 @@ export function TestingResult({
         {data.chunks?.map((x) => (
           <FormContainer key={x.chunk_id} className="px-5 py-2.5">
             <ChunkTitle item={x}></ChunkTitle>
-            <p className="!mt-2.5"> {x.content_with_weight}</p>
+            <p
+              className="!mt-2.5"
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(x.content_with_weight),
+              }}
+            />
           </FormContainer>
         ))}
       </section>
