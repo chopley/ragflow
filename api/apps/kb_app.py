@@ -247,7 +247,10 @@ def list_tags(kb_id):
             code=settings.RetCode.AUTHENTICATION_ERROR
         )
 
-    tags = settings.retrievaler.all_tags(current_user.id, [kb_id])
+    tenants = UserTenantService.get_tenants_by_user_id(current_user.id)
+    tags = []
+    for tenant in tenants:
+        tags += settings.retrievaler.all_tags(tenant["tenant_id"], [kb_id])
     return get_json_result(data=tags)
 
 
@@ -263,7 +266,10 @@ def list_tags_from_kbs():
                 code=settings.RetCode.AUTHENTICATION_ERROR
             )
 
-    tags = settings.retrievaler.all_tags(current_user.id, kb_ids)
+    tenants = UserTenantService.get_tenants_by_user_id(current_user.id)
+    tags = []
+    for tenant in tenants:
+        tags += settings.retrievaler.all_tags(tenant["tenant_id"], kb_ids)
     return get_json_result(data=tags)
 
 
@@ -345,6 +351,7 @@ def knowledge_graph(kb_id):
             obj["graph"]["edges"] = sorted(filtered_edges, key=lambda x: x.get("weight", 0), reverse=True)[:128]
     return get_json_result(data=obj)
 
+
 @manager.route('/<kb_id>/knowledge_graph', methods=['DELETE'])  # noqa: F821
 @login_required
 def delete_knowledge_graph(kb_id):
@@ -358,3 +365,17 @@ def delete_knowledge_graph(kb_id):
     settings.docStoreConn.delete({"knowledge_graph_kwd": ["graph", "subgraph", "entity", "relation"]}, search.index_name(kb.tenant_id), kb_id)
 
     return get_json_result(data=True)
+
+
+@manager.route("/get_meta", methods=["GET"])  # noqa: F821
+@login_required
+def get_meta():
+    kb_ids = request.args.get("kb_ids", "").split(",")
+    for kb_id in kb_ids:
+        if not KnowledgebaseService.accessible(kb_id, current_user.id):
+            return get_json_result(
+                data=False,
+                message='No authorization.',
+                code=settings.RetCode.AUTHENTICATION_ERROR
+            )
+    return get_json_result(data=DocumentService.get_meta_by_kbs(kb_ids))

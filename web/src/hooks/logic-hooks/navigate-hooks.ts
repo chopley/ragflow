@@ -35,9 +35,12 @@ export const useNavigatePage = () => {
     navigate(Routes.Chats);
   }, [navigate]);
 
-  const navigateToChat = useCallback(() => {
-    navigate(Routes.Chat);
-  }, [navigate]);
+  const navigateToChat = useCallback(
+    (id: string) => () => {
+      navigate(`${Routes.Chat}/${id}`);
+    },
+    [navigate],
+  );
 
   const navigateToAgents = useCallback(() => {
     navigate(Routes.Agents);
@@ -54,6 +57,13 @@ export const useNavigatePage = () => {
     [navigate],
   );
 
+  const navigateToAgentLogs = useCallback(
+    (id: string) => () => {
+      navigate(`${Routes.AgentLogPage}/${id}`);
+    },
+    [navigate],
+  );
+
   const navigateToAgentTemplates = useCallback(() => {
     navigate(Routes.AgentTemplates);
   }, [navigate]);
@@ -62,9 +72,12 @@ export const useNavigatePage = () => {
     navigate(Routes.Searches);
   }, [navigate]);
 
-  const navigateToSearch = useCallback(() => {
-    navigate(Routes.Search);
-  }, [navigate]);
+  const navigateToSearch = useCallback(
+    (id: string) => {
+      navigate(`${Routes.Search}/${id}`);
+    },
+    [navigate],
+  );
 
   const navigateToChunkParsedResult = useCallback(
     (id: string, knowledgeId?: string) => () => {
@@ -120,6 +133,7 @@ export const useNavigatePage = () => {
     navigateToChunk,
     navigateToAgents,
     navigateToAgent,
+    navigateToAgentLogs,
     navigateToAgentTemplates,
     navigateToSearchList,
     navigateToSearch,

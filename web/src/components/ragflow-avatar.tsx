@@ -23,8 +23,8 @@ const getColorForName = (name: string): { from: string; to: string } => {
   const hue = hash % 360;
 
   return {
-    from: `hsl(${hue}, 70%, 80%)`,
-    to: `hsl(${hue}, 60%, 30%)`,
+    to: `hsl(${hue}, 70%, 80%)`,
+    from: `hsl(${hue}, 60%, 30%)`,
   };
 };
 export const RAGFlowAvatar = memo(
@@ -49,7 +49,7 @@ export const RAGFlowAvatar = memo(
     const initials = getInitials(name);
     const { from, to } = name
       ? getColorForName(name)
-      : { from: 'hsl(0, 0%, 80%)', to: 'hsl(0, 0%, 30%)' };
+      : { from: 'hsl(0, 0%, 30%)', to: 'hsl(0, 0%, 80%)' };
 
     const fallbackRef = useRef<HTMLElement>(null);
     const [fontSize, setFontSize] = useState('0.875rem');

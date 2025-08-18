@@ -8,18 +8,19 @@ import { IModalProps } from '@/interfaces/common';
 import { NotebookText } from 'lucide-react';
 import 'react18-json-view/src/style.css';
 import { useCacheChatLog } from '../hooks/use-cache-chat-log';
-import { WorkFlowTimeline } from './workFlowTimeline';
+import { WorkFlowTimeline } from './workflow-timeline';
 
 type LogSheetProps = IModalProps<any> &
   Pick<
     ReturnType<typeof useCacheChatLog>,
     'currentEventListWithoutMessageById' | 'currentMessageId'
-  >;
+  > & { sendLoading: boolean };
 
 export function LogSheet({
   hideModal,
   currentEventListWithoutMessageById,
   currentMessageId,
+  sendLoading,
 }: LogSheetProps) {
   return (
     <Sheet open onOpenChange={hideModal} modal={false}>
@@ -36,6 +37,7 @@ export function LogSheet({
               currentMessageId,
             )}
             currentMessageId={currentMessageId}
+            sendLoading={sendLoading}
           />
         </section>
       </SheetContent>

@@ -22,7 +22,7 @@ export const AgentInstanceContext = createContext<AgentInstanceContextType>(
 type AgentChatContextType = Pick<
   ReturnType<typeof useShowLogSheet>,
   'showLogSheet'
->;
+> & { setLastSendLoadingFunc: (loading: boolean, messageId: string) => void };
 
 export const AgentChatContext = createContext<AgentChatContextType>(
   {} as AgentChatContextType,
@@ -42,6 +42,7 @@ export type HandleContextType = {
   id?: string;
   type: HandleType;
   position: Position;
+  isFromConnectionDrag: boolean;
 };
 
 export const HandleContext = createContext<HandleContextType>(

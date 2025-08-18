@@ -1,4 +1,9 @@
 import { BlockButton } from '@/components/ui/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { Position } from '@xyflow/react';
 import { PencilLine, X } from 'lucide-react';
@@ -13,6 +18,7 @@ import { Operator } from '../../constant';
 import { AgentInstanceContext } from '../../context';
 import { useFindMcpById } from '../../hooks/use-find-mcp-by-id';
 import { INextOperatorForm } from '../../interface';
+import OperatorIcon from '../../operator-icon';
 import useGraphStore from '../../store';
 import { filterDownstreamAgentNodeIds } from '../../utils/filter-downstream-nodes';
 import { ToolPopover } from './tool-popover';
@@ -25,17 +31,32 @@ export function ToolCard({
   className,
   ...props
 }: PropsWithChildren & React.HTMLAttributes<HTMLLIElement>) {
-  return (
-    <li
-      {...props}
-      className={cn(
-        'flex bg-background-card p-1 rounded-sm justify-between',
-        className,
-      )}
-    >
-      {children}
-    </li>
-  );
+  const element = useMemo(() => {
+    return (
+      <li
+        {...props}
+        className={cn(
+          'flex bg-bg-card p-1 rounded-sm justify-between',
+          className,
+        )}
+      >
+        {children}
+      </li>
+    );
+  }, [children, className, props]);
+
+  if (children === Operator.Code) {
+    return (
+      <Tooltip>
+        <TooltipTrigger asChild>{element}</TooltipTrigger>
+        <TooltipContent>
+          <p>It doesn't have any config.</p>
+        </TooltipContent>
+      </Tooltip>
+    );
+  }
+
+  return element;
 }
 
 type ActionButtonProps<T> = {
@@ -50,7 +71,7 @@ function ActionButton<T>({ deleteRecord, record, edit }: ActionButtonProps<T>) {
   }, [deleteRecord, record]);
 
   return (
-    <div className="flex items-center gap-2 text-text-sub-title">
+    <div className="flex items-center gap-2 text-text-secondary">
       <PencilLine
         className="size-4 cursor-pointer"
         data-tool={record}
@@ -85,11 +106,14 @@ export function AgentTools() {
 
   return (
     <section className="space-y-2.5">
-      <span className="text-text-sub-title">Tools</span>
+      <span className="text-text-secondary">Tools</span>
       <ul className="space-y-2">
         {toolNames.map((x) => (
           <ToolCard key={x}>
-            {x}
+            <div className="flex gap-2 items-center">
+              <OperatorIcon name={x as Operator}></OperatorIcon>
+              {x}
+            </div>
             <ActionButton
               record={x}
               deleteRecord={deleteNodeTool(x)}
@@ -136,7 +160,7 @@ export function Agents({ node }: INextOperatorForm) {
 
   return (
     <section className="space-y-2.5">
-      <span className="text-text-sub-title">Agents</span>
+      <span className="text-text-secondary">Agents</span>
       <ul className="space-y-2">
         {subBottomAgentNodeIds.map((id) => {
           const currentNode = getNode(id);
