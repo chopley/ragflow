@@ -163,12 +163,10 @@ function MarkdownContent({
             </HoverCard>
           )}
           <div className={'space-y-2 max-w-[40vw] w-full'}>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(chunkItem?.content ?? ''),
-              }}
-              className={classNames(styles.chunkContentText, 'w-full')}
-            ></div>
+            <div className={classNames(styles.chunkContentText, 'w-full')}>
+              {/* Safely display content as plain text to prevent HTML execution */}
+              {chunkItem?.content ?? ''}
+            </div>
             {documentId && (
               <div className="flex gap-1">
                 {fileThumbnail ? (

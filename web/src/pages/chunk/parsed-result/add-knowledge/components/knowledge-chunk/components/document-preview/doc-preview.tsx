@@ -60,7 +60,7 @@ export const DocPreviewer: React.FC<DocPreviewerProps> = ({
           'code',
           'pre',
         ],
-        ALLOWED_ATTR: ['class', 'id', 'style'],
+        ALLOWED_ATTR: ['class'], // Remove 'id' and 'style' for security
         KEEP_CONTENT: true,
       });
 

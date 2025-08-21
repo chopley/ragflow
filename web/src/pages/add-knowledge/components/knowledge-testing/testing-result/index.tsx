@@ -11,7 +11,6 @@ import {
   PaginationProps,
   Space,
 } from 'antd';
-import DOMPurify from 'dompurify';
 import camelCase from 'lodash/camelCase';
 import SelectFiles from './select-files';
 
@@ -128,12 +127,10 @@ const TestingResult = ({
                   ></Image>
                 )}
               </div>
-              <div
-                className="pt-4"
-                dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(x.content_with_weight),
-                }}
-              />
+              <div className="pt-4">
+                {/* Safely display content as plain text to prevent HTML execution */}
+                {x.content_with_weight}
+              </div>
             </Card>
           ))
         ) : loading === false && chunks && chunks.length === 0 ? (

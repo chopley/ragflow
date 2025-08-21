@@ -155,12 +155,10 @@ const MarkdownContent = ({
             </Popover>
           )}
           <div className={'space-y-2 max-w-[40vw]'}>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(chunkItem?.content ?? ''),
-              }}
-              className={classNames(styles.chunkContentText)}
-            ></div>
+            <div className={classNames(styles.chunkContentText)}>
+              {/* Safely display content as plain text to prevent HTML execution */}
+              {chunkItem?.content ?? ''}
+            </div>
             {documentId && (
               <Flex gap={'small'}>
                 {fileThumbnail ? (
